@@ -1,14 +1,14 @@
 def main():
     book_path = "books/frankenstein.txt"
     txt = get_file_text(book_path)
-    print_report(get_words_count(txt), get_chars_count(txt))
+    print_report(book_path, get_total_words(txt), get_chars_count(txt))
 
-def print_report(words_count, chars_count):
-    print("--- Begin report of books/frankenstein.txt ---")
-    print(f"{words_count} words found in the document\n")
+def print_report(path, words_num, chars_count):
+    print(f"--- Begin report of {path} ---")
+    print(f"{words_num} words found in the document")
+    print()
 
     chars_list = get_sorted_list_by_count(chars_count)
-
     for c in chars_list:
         if c["char"].isalpha():
             print(f"The '{c['char']}' character was found {c['count']} times")
@@ -20,23 +20,25 @@ def get_file_text(path):
         file_contents = f.read()
     return file_contents
 
-def get_words_count(txt):
+def get_total_words(txt):
     return len(txt.split())
 
 def get_chars_count(txt):
     lower_txt = txt.lower()
     chars = {}
-    for i in range(0,len(lower_txt)):
-        count = chars.get(lower_txt[i]) or 0
-        chars[lower_txt[i]] = count + 1
+    for c in lower_txt:
+        if c in chars:
+            chars[c] += 1
+        else:
+            chars[c] = 1
     return chars
 
 def get_sorted_list_by_count(d):
-    ld = dic_to_list_of_dicts(d)
+    ld = convert_to_list_of_dicts(d)
     ld.sort(reverse=True, key=sort_by_count)
     return ld
 
-def dic_to_list_of_dicts(d):
+def convert_to_list_of_dicts(d):
     ld = []
     for key in d:
         ld.append({"char" : key, "count" : d[key]})
